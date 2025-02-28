@@ -1,12 +1,13 @@
-import "@/styles/global.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
       <body>
-        {children}
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
