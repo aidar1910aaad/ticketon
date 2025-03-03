@@ -4,7 +4,6 @@ export async function login(credentials: { email: string; password: string }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
-      mode: "no-cors"
     });
 
     if (!res.ok) {

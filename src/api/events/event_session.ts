@@ -1,6 +1,6 @@
 export async function fetchEventSessions(): Promise<any[]> {
     try {
-      const response = await fetch("http://2.56.177.66:8080/api/event-sessions");
+      const response = await fetch("http://94.232.246.12:8080/api/event-sessions");
       
       if (!response.ok) {
         throw new Error("Ошибка загрузки сессий событий");
@@ -16,7 +16,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function fetchEventSessionsByEvent(eventId: string): Promise<any[]> {
     try {
-      const response = await fetch(`http://2.56.177.66:8080/api/event-sessions/search/by-event/${eventId}`);
+      const response = await fetch(`http://94.232.246.12:8080/api/event-sessions/search/by-event/${eventId}`);
       
       if (!response.ok) {
         throw new Error("Ошибка загрузки сессий события");
@@ -31,7 +31,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function createEventSession(sessionData: Record<string, any>, token: string): Promise<any> {
     try {
-      const response = await fetch("http://2.56.177.66:8080/api/event-sessions", {
+      const response = await fetch("http://94.232.246.12:8080/api/event-sessions", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -55,7 +55,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function updateEventSession(sessionId: string, sessionData: Record<string, any>, token: string): Promise<any> {
     try {
-      const response = await fetch(`http://2.56.177.66:8080/api/event-sessions/${sessionId}`, {
+      const response = await fetch(`http://94.232.246.12:8080/api/event-sessions/${sessionId}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -79,7 +79,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function deleteEventSession(sessionId: string, token: string): Promise<boolean> {
     try {
-      const response = await fetch(`http://2.56.177.66:8080/api/event-sessions/${sessionId}`, {
+      const response = await fetch(`http://94.232.246.12:8080/api/event-sessions/${sessionId}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`,

@@ -1,6 +1,6 @@
 export async function register(data: { name: string; surname: string; email: string; password: string }) {
     try {
-      const res = await fetch("http://2.56.177.66:8080/api/auth/register", {
+      const res = await fetch("http://94.232.246.12:8080/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

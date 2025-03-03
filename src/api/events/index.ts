@@ -1,6 +1,6 @@
 export async function fetchCategories(): Promise<{ id: string; name: string }[]> {
   try {
-    const response = await fetch("http://2.56.177.66:8080/api/event-categories");
+    const response = await fetch("http://94.232.246.12:8080/api/event-categories");
 
     if (!response.ok) {
       throw new Error("Ошибка загрузки категорий");
@@ -27,7 +27,7 @@ export async function createEvent(eventData: Record<string, any>, token: string)
 
     console.log("Отправка события:", Object.fromEntries(formData.entries())); // ✅ Логируем, что отправляем
 
-    const response = await fetch("http://2.56.177.66:8080/api/events", {
+    const response = await fetch("http://94.232.246.12:8080/api/events", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ export async function createEvent(eventData: Record<string, any>, token: string)
 
 export async function deleteEvent(eventId: string, token: string): Promise<boolean> {
   try {
-    const response = await fetch(`http://2.56.177.66:8080/api/events/${eventId}`, {
+    const response = await fetch(`http://94.232.246.12:8080/api/events/${eventId}`, {
       method: "DELETE",
       mode: "cors", // ✅ Указываем CORS-режим
       headers: {
@@ -83,7 +83,7 @@ interface EventResponse {
 
 export async function fetchEvents(): Promise<Event[]> {
   try {
-    const response = await fetch("http://2.56.177.66:8080/api/events");
+    const response = await fetch("http://94.232.246.12:8080/api/events");
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки событий: ${response.statusText}`);
@@ -101,7 +101,7 @@ export async function fetchEvents(): Promise<Event[]> {
 
 export async function fetchEventById(eventId: string): Promise<any> {
   try {
-    const response = await fetch(`http://2.56.177.66:8080/api/events/search/by-id/${eventId}`);
+    const response = await fetch(`http://94.232.246.12:8080/api/events/search/by-id/${eventId}`);
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки события: ${response.statusText}`);
