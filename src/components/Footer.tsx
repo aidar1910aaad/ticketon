@@ -5,6 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#1B242C] text-white py-12">
       <div className="max-w-[1440px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+        
         {/* Колонка 1: Логотип + Описание */}
         <div>
           <Image src="/icons/ticketon-logo.svg" alt="Ticketon" width={180} height={40} />
@@ -12,7 +13,7 @@ const Footer = () => {
             Ticketon — ваш онлайн-сервис для покупки билетов на концерты, театры, кино, спорт и другие мероприятия.
           </p>
           <p className="mt-2 text-gray-400 text-sm">
-            Мы предоставляем удобный способ забронировать и оплатить билеты на лучшие события в вашем городе.
+            Мы предоставляем удобный способ забронировать и оплатить билеты на лучшие события в Кыргызстане.
           </p>
         </div>
 
@@ -41,10 +42,10 @@ const Footer = () => {
         {/* Колонка 4: Контакты */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Контакты</h3>
-          <p className="text-gray-400">📞 <span className="font-semibold">+7 (727) 225-10-50</span> (Алматы)</p>
-          <p className="text-gray-400">📞 <span className="font-semibold">+7 (717) 247-63-50</span> (Астана)</p>
-          <p className="text-gray-400">📞 <span className="font-semibold">+7 (771) 936-53-53</span> (Казахстан)</p>
-          <p className="text-gray-400 mt-2">✉️ <Link href="mailto:help@ticketon.kz" className="hover:text-white">help@ticketon.kz</Link></p>
+          <p className="text-gray-400">📞 <span className="font-semibold">+996 (312) 88-00-00</span> (Бишкек)</p>
+          <p className="text-gray-400">📞 <span className="font-semibold">+996 (551) 88-00-00</span> (WhatsApp)</p>
+          <p className="text-gray-400">📞 <span className="font-semibold">+996 (770) 88-00-00</span> (Кыргызстан)</p>
+          <p className="text-gray-400 mt-2">✉️ <Link href="mailto:support@ticketon.kg" className="hover:text-white">support@ticketon.kg</Link></p>
 
           {/* Соцсети */}
           <div className="flex space-x-4 mt-4">
@@ -58,7 +59,7 @@ const Footer = () => {
 
       {/* Копирайт */}
       <div className="text-center text-gray-500 text-sm mt-12">
-        © {new Date().getFullYear()} Ticketon.kz. Все права защищены.
+        © {new Date().getFullYear()} Ticketon.kg. Все права защищены.
       </div>
     </footer>
   );

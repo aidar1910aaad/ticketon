@@ -1,5 +1,5 @@
 export async function login(credentials: { email: string; password: string }) {
-  const res = await fetch("https://44.212.29.177:8080/api/auth/login", {
+  const res = await fetch("https://2.56.177.66:8444/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),

@@ -15,7 +15,7 @@ const mainCategories = [
   "Новинки",
   "Акции",
   "Последний шанс купить",
-  "Знакомство с Тикетон",
+  "Знакомство с Ticketon",
   "Как покупать билеты?",
   "Способы оплаты",
   "Правила возврата",
@@ -25,12 +25,10 @@ const mainCategories = [
 ];
 
 const contacts = [
-  "+7 (727) 225-10-50 (Алматы)",
-  "+7 (717) 247-63-50 (Астана)",
-  "+7 (771) 936-53-53",
+  "+996 (312) 88-00-00 (Бишкек)",
+  "+996 (551) 88-00-00 (WhatsApp)",
   "Telegram",
-  "WhatsApp",
-  "help@ticketon.kz",
+  "support@ticketon.kg",
 ];
 
 const subCategories = [
@@ -48,21 +46,16 @@ const subCategories = [
 ];
 
 const cities = [
-  "Алматы",
-  "Нур-Султан",
-  "Шымкент",
-  "Караганда",
-  "Актобе",
-  "Тараз",
-  "Павлодар",
-  "Усть-Каменогорск",
-  "Семей",
-  "Костанай",
-  "Петропавловск",
-  "Актау",
-  "Атырау",
-  "Кызылорда",
-  "Туркестан",
+  "Бишкек",
+  "Ош",
+  "Джалал-Абад",
+  "Каракол",
+  "Нарын",
+  "Баткен",
+  "Талас",
+  "Кант",
+  "Токмок",
+  "Балыкчы",
 ];
 
 export default function AuthNavbar() {
@@ -133,9 +126,8 @@ export default function AuthNavbar() {
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
           >
-            <option value="ru">RU</option>
-            <option value="kz">KZ</option>
-            <option value="en">EN</option>
+            <option value="ru">Русский</option>
+            <option value="kg">Кыргызча</option>
           </select>
         </div>
 

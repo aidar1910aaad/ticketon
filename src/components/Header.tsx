@@ -5,25 +5,25 @@ import Link from "next/link";
 import { FaPhone, FaGlobe } from "react-icons/fa";
 
 const cities = [
-  "Алматы", "Нур-Султан", "Шымкент", "Караганда", "Актобе",
-  "Тараз", "Павлодар", "Усть-Каменогорск", "Семей", "Костанай",
-  "Петропавловск", "Актау", "Атырау", "Кызылорда", "Туркестан"
+  "Бишкек", "Ош", "Джалал-Абад", "Каракол", "Нарын",
+  "Баткен", "Талас", "Кант", "Токмок", "Балыкчы"
 ];
 
 const Header = () => {
   const [isCityOpen, setIsCityOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState("Выбрать город");
+  const [selectedLanguage, setSelectedLanguage] = useState("ru");
 
   return (
-    <header className="w-full bg-white shadow-md">
+    <header className="w-full bg-white shadow-md relative">
       <div className="max-w-[1440px] mx-auto flex justify-between items-center p-4">
-        {/* Логотип (Текст) */}
-        <span className="text-2xl font-bold text-blue-600">Ticket's</span>
+        {/* Логотип */}
+        <span className="text-2xl font-bold text-blue-600">Ticket.kg</span>
 
         {/* Меню */}
         <nav className="flex items-center space-x-6 text-lg relative">
           {/* Выбор города */}
-          <div className="relative">
+          <div className="relative z-50">
             <button 
               onClick={() => setIsCityOpen(!isCityOpen)} 
               className="hover:text-gray-600"
@@ -31,7 +31,7 @@ const Header = () => {
               {selectedCity}
             </button>
             {isCityOpen && (
-              <ul className="absolute bg-white border shadow-md rounded-md mt-2 w-48 max-h-60 overflow-y-auto">
+              <ul className="absolute bg-white border shadow-lg rounded-md mt-2 w-48 max-h-60 overflow-y-auto z-50">
                 {cities.map((city) => (
                   <li
                     key={city}
@@ -66,10 +66,13 @@ const Header = () => {
           {/* Переключатель языка */}
           <div className="ml-4 flex items-center space-x-2 border p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
             <FaGlobe />
-            <select className="bg-transparent outline-none cursor-pointer">
-              <option value="ru">RU</option>
-              <option value="kz">KZ</option>
-              <option value="en">EN</option>
+            <select 
+              className="bg-transparent outline-none cursor-pointer"
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+            >
+              <option value="ru">Русский</option>
+              <option value="kg">Кыргызча</option>
             </select>
           </div>
         </nav>
