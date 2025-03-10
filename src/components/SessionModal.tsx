@@ -13,13 +13,9 @@ interface Props {
 
 export default function SessionModal({ eventId, isOpen, onClose, onSessionAdded }: Props) {
   const [loading, setLoading] = useState(false);
-  
-  // Фиксированные ID для города Ош и соответствующего здания
-  const OSH_CITY_ID = "a67f91e5-ce67-4062-923c-d6c4ac6a5cc6";
-  const OSH_BUILDING_ID = "b1234567-abcd-8901-efgh-234567890xyz"; // 🔥 Укажи правильный ID здания в Оше
-
   const [newSession, setNewSession] = useState({
     startTime: "",
+    price: "",
   });
 
   if (!isOpen) return null;
@@ -30,21 +26,23 @@ export default function SessionModal({ eventId, isOpen, onClose, onSessionAdded 
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Токен отсутствует");
 
-      if (!newSession.startTime) {
-        alert("Заполните дату и время!");
+      if (!newSession.startTime || !newSession.price) {
+        alert("Заполните дату, время и цену!");
         return;
       }
 
-      await createEventSession({
-        eventId,
-        buildingId: OSH_BUILDING_ID, // 🔥 Автоматически привязанное здание
-        cityId: OSH_CITY_ID, // 🔥 Автоматически привязанный город
-        startTime: newSession.startTime,
-      }, token);
+      await createEventSession(
+        {
+          eventId,
+          startTime: newSession.startTime,
+          price: parseFloat(newSession.price),
+        },
+        token
+      );
 
       onSessionAdded();
       onClose();
-      setNewSession({ startTime: "" });
+      setNewSession({ startTime: "", price: "" });
     } catch (error) {
       console.error("Ошибка при создании сессии:", error);
     } finally {
@@ -62,25 +60,25 @@ export default function SessionModal({ eventId, isOpen, onClose, onSessionAdded 
           </button>
         </div>
 
-        {/* Фиксированное поле города Ош */}
-        <label className="block text-sm font-medium text-gray-700">Город</label>
-        <select disabled className="border px-3 py-2 rounded-lg w-full mb-2 bg-gray-100 cursor-not-allowed">
-          <option value={OSH_CITY_ID}>Ош</option>
-        </select>
-
-        {/* Фиксированное здание в Оше */}
-        <label className="block text-sm font-medium text-gray-700">Здание</label>
-        <select disabled className="border px-3 py-2 rounded-lg w-full mb-2 bg-gray-100 cursor-not-allowed">
-          <option value={OSH_BUILDING_ID}>Основное здание, Ош</option>
-        </select>
-
-        {/* Дата и время (изменяемое поле) */}
+        {/* 🔹 Дата и время */}
         <label className="block text-sm font-medium text-gray-700">Дата и время</label>
         <input
           type="datetime-local"
           className="border px-3 py-2 rounded-lg w-full mb-2"
           value={newSession.startTime}
-          onChange={(e) => setNewSession({ startTime: e.target.value })}
+          onChange={(e) => setNewSession({ ...newSession, startTime: e.target.value })}
+        />
+
+        {/* 🔹 Цена */}
+        <label className="block text-sm font-medium text-gray-700">Цена (KGS)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="Введите цену"
+          className="border px-3 py-2 rounded-lg w-full mb-2"
+          value={newSession.price}
+          onChange={(e) => setNewSession({ ...newSession, price: e.target.value })}
         />
 
         <button

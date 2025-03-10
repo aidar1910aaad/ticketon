@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Users, Building, Ticket, Calendar, Menu, LogOut } from "lucide-react";
+import { Home, Users, Building, Ticket, Calendar, Menu, LogOut, List } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const menuItems = [
@@ -10,6 +10,7 @@ const menuItems = [
   { name: "Здания", path: "/admin/buildings", icon: <Building size={20} /> },
   { name: "Билеты", path: "/admin/tickets", icon: <Ticket size={20} /> },
   { name: "События", path: "/admin/events", icon: <Calendar size={20} /> },
+  { name: "Категории", path: "/admin/categories", icon: <List size={20} /> },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const pathname = usePathname();
 
-  // ✅ Проверяем авторизацию
+  // Проверяем авторизацию
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -25,7 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [router]);
 
-  // ✅ Выход
+  // Выход
   const handleLogout = () => {
     if (confirm("Вы уверены, что хотите выйти?")) {
       localStorage.clear();

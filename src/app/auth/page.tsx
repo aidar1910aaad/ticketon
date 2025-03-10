@@ -10,7 +10,8 @@ export default function AuthPage() {
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
-    email: "",
+    countryCode: "+7",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -18,7 +19,7 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -29,25 +30,23 @@ export default function AuthPage() {
   
     try {
       let response;
+      const fullPhoneNumber = `${formData.countryCode}${formData.phoneNumber}`;
   
       if (isLogin) {
-        response = await login({ email: formData.email, password: formData.password });
+        response = await login({ phoneNumber: fullPhoneNumber, password: formData.password });
   
         if (!response || !response.access_token) {
           throw new Error("Ошибка: сервер не вернул токен.");
         }
   
-        // ✅ Сохраняем email пользователя (введенный в форму)
-        localStorage.setItem("user", JSON.stringify({ email: formData.email }));
+        localStorage.setItem("user", JSON.stringify({ phoneNumber: fullPhoneNumber }));
   
-        // ✅ Определяем, является ли пользователь админом
-        const isAdmin = formData.email === "aidar@gmail.com";
+        const isAdmin = fullPhoneNumber === "+77477418745" && formData.password === "Aidar2005";
         console.log("Редирект на:", isAdmin ? "/admin" : "/dashboard");
         router.push(isAdmin ? "/admin" : "/dashboard");
   
       } else {
-        // ✅ Код регистрации остается без изменений
-        if (!formData.name || !formData.surname || !formData.email || !formData.password) {
+        if (!formData.name || !formData.surname || !formData.phoneNumber || !formData.password) {
           throw new Error("Все поля должны быть заполнены");
         }
   
@@ -63,12 +62,12 @@ export default function AuthPage() {
         response = await register({
           name: formData.name,
           surname: formData.surname,
-          email: formData.email,
+          phoneNumber: fullPhoneNumber,
           password: formData.password,
         });
   
         console.log("Ответ сервера:", response);
-        localStorage.setItem("user", JSON.stringify({ email: formData.email }));
+        localStorage.setItem("user", JSON.stringify({ phoneNumber: fullPhoneNumber }));
         router.push("/dashboard");
       }
     } catch (err: any) {
@@ -78,7 +77,6 @@ export default function AuthPage() {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -111,14 +109,25 @@ export default function AuthPage() {
             </>
           )}
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full p-2 border rounded-md"
-            required
-            onChange={handleChange}
-          />
+          <div className="flex space-x-2">
+            <select
+              name="countryCode"
+              className="p-2 border rounded-md w-24"
+              onChange={handleChange}
+              value={formData.countryCode}
+            >
+              <option value="+7">🇰🇿 +7</option>
+              <option value="+996">🇰🇬 +996</option>
+            </select>
+            <input
+              type="tel"
+              name="phoneNumber"
+              placeholder="Номер"
+              className="w-full p-2 border rounded-md"
+              required
+              onChange={handleChange}
+            />
+          </div>
 
           <input
             type="password"
@@ -150,7 +159,7 @@ export default function AuthPage() {
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-4">
-          {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}{" "}
+          {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"} {" "}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-blue-600 hover:underline"

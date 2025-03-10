@@ -31,24 +31,39 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function createEventSession(sessionData: Record<string, any>, token: string): Promise<any> {
     try {
+      if (!token) throw new Error("Ошибка: отсутствует токен авторизации!");
+  
+      const formData = new FormData();
+      formData.append("eventId", sessionData.eventId);
+      formData.append("startTime", sessionData.startTime);
+      formData.append("price", sessionData.price.toString()); // Приведение числа к строке
+  
+      console.log("📌 Отправка запроса на сервер:", {
+        URL: "http://94.232.246.12:8080/api/event-sessions",
+        Headers: { Authorization: `Bearer ${token}` },
+        FormData: Object.fromEntries(formData.entries()),
+      });
+  
       const response = await fetch("http://94.232.246.12:8080/api/event-sessions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          // Не указываем "Content-Type", браузер сам установит boundary для FormData
         },
-        body: JSON.stringify(sessionData),
+        body: formData,
       });
   
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Ошибка создания сессии события:", errorData);
-        throw new Error(errorData.message || "Ошибка создания сессии события");
+        const errorData = await response.text(); // Читаем ответ как текст, чтобы увидеть детали ошибки
+        console.error("❌ Ошибка создания сессии:", errorData);
+        throw new Error(`Ошибка создания сессии: ${errorData}`);
       }
   
-      return await response.json();
+      const result = await response.json();
+      console.log("✅ Успешно создана сессия:", result);
+      return result;
     } catch (error) {
-      console.error("Ошибка при создании сессии события:", error);
+      console.error("❌ Ошибка при создании сессии:", error);
       throw error;
     }
   }

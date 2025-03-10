@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthNavbar from "@/components/dashboard/AuthNavbar";
 import Footer from "@/components/Footer";
+import CategoryMenu from "@/components/dashboard/CategoryMenu";
 
 
 
@@ -43,6 +44,7 @@ export default function AuthorizedLayout({ children }: { children: React.ReactNo
   return (
     <>
       <AuthNavbar />
+      <CategoryMenu/>
       {children}
       <Footer />
     </>

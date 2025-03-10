@@ -16,14 +16,15 @@ export default function EventForm({ onEventCreated }: Props) {
     description: "",
     additionalInformation: "",
     categoryID: "",
-    startTime: "",
     ageRestriction: "",
+    backgroundImage: null as File | null,
   });
 
   useEffect(() => {
     async function loadCategories() {
       try {
         const data = await fetchCategories();
+        console.log("Загруженные категории:", data);
         setCategories(data);
       } catch (error) {
         console.error("Ошибка загрузки категорий:", error);
@@ -37,20 +38,26 @@ export default function EventForm({ onEventCreated }: Props) {
   const handleCreate = async () => {
     try {
       setLoading(true);
-
+  
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Токен отсутствует! Авторизуйтесь заново.");
-
-      if (!newEvent.title || !newEvent.description || !newEvent.categoryID || !newEvent.startTime) {
-        alert("Заполните все обязательные поля!");
+  
+      console.log("📌 Перед отправкой формы:", newEvent);
+  
+      if (!newEvent.title || !newEvent.description || !newEvent.categoryID || !newEvent.ageRestriction || !newEvent.backgroundImage) {
+        alert("Заполните все обязательные поля и добавьте изображение!");
+        console.error("Ошибка: Одно из обязательных полей не заполнено", newEvent);
         return;
       }
-
+  
       if (!isValidUUID(newEvent.categoryID)) {
         alert("Ошибка: `categoryID` должен быть валидным UUID!");
+        console.error("Ошибка: Некорректный UUID категории", newEvent.categoryID);
         return;
       }
-
+  
+      console.log("📌 Данные перед отправкой:", newEvent);
+  
       await createEvent(newEvent, token);
       onEventCreated();
       setNewEvent({
@@ -58,17 +65,17 @@ export default function EventForm({ onEventCreated }: Props) {
         description: "",
         additionalInformation: "",
         categoryID: "",
-        startTime: "",
         ageRestriction: "",
+        backgroundImage: null,
       });
     } catch (error) {
-      console.error("Ошибка при создании события:", error);
+      console.error("❌ Ошибка при создании события:", error);
       alert(error.message);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="flex flex-col gap-2 mt-4">
       <input
@@ -104,12 +111,6 @@ export default function EventForm({ onEventCreated }: Props) {
           </option>
         ))}
       </select>
-      <input
-        type="datetime-local"
-        className="border px-3 py-2 rounded-lg"
-        value={newEvent.startTime}
-        onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
-      />
       <select
         value={newEvent.ageRestriction}
         onChange={(e) => setNewEvent({ ...newEvent, ageRestriction: e.target.value })}
@@ -122,6 +123,11 @@ export default function EventForm({ onEventCreated }: Props) {
         <option value="AGE_16_PLUS">16+</option>
         <option value="AGE_18_PLUS">18+</option>
       </select>
+      <input
+        type="file"
+        className="border px-3 py-2 rounded-lg"
+        onChange={(e) => setNewEvent({ ...newEvent, backgroundImage: e.target.files?.[0] || null })}
+      />
       <button
         onClick={handleCreate}
         className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2"

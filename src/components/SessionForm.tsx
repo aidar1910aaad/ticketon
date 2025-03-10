@@ -21,21 +21,37 @@ export default function SessionForm({ eventId, onSessionAdded }: Props) {
       setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Токен отсутствует");
-
-      if (!newSession.buildingId || !newSession.startTime) {
-        alert("Заполните все поля!");
+  
+      if (!newSession.startTime || !newSession.price) {
+        alert("Заполните дату, время и цену!");
         return;
       }
-
-      await createEventSession({ eventId, ...newSession }, token);
+  
+      console.log("📌 Данные перед отправкой:", {
+        eventId,
+        startTime: newSession.startTime,
+        price: parseFloat(newSession.price),
+      });
+  
+      await createEventSession(
+        {
+          eventId,
+          startTime: newSession.startTime,
+          price: parseFloat(newSession.price),
+        },
+        token
+      );
+  
       onSessionAdded();
-      setNewSession({ buildingId: "", startTime: "" });
+      onClose();
+      setNewSession({ startTime: "", price: "" });
     } catch (error) {
       console.error("Ошибка при создании сессии:", error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex flex-col gap-2 mt-2">

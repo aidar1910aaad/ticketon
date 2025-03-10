@@ -7,25 +7,42 @@ export async function fetchCategories(): Promise<{ id: string; name: string }[]>
     }
 
     const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    console.log("🔹 Категории, полученные от API:", data);
+
+    if (!Array.isArray(data)) {
+      console.error("🔴 Ошибка: API вернул неожиданный формат", data);
+      return [];
+    }
+
+    return data;
   } catch (error) {
     console.error("Ошибка при получении категорий:", error);
     return [];
   }
 }
-
 export async function createEvent(eventData: Record<string, any>, token: string): Promise<any> {
   try {
-    const formData = new FormData();
-    
-    // ✅ Добавляем все поля в `FormData`
-    Object.keys(eventData).forEach((key) => {
-      if (eventData[key]) {
-        formData.append(key, eventData[key]);
-      }
-    });
+    console.log("📌 Данные перед созданием FormData:", eventData);
 
-    console.log("Отправка события:", Object.fromEntries(formData.entries())); // ✅ Логируем, что отправляем
+    const formData = new FormData();
+    formData.append("title", eventData.title ?? "");
+    formData.append("description", eventData.description ?? "");
+    formData.append("additionalInformation", eventData.additionalInformation ?? "");
+    formData.append("categoryId", eventData.categoryID ?? "");
+    formData.append("ageRestriction", eventData.ageRestriction ?? "");
+
+    // ✅ Проверяем, есть ли изображение
+    if (eventData.backgroundImage) {
+      // Преобразуем `File` в `Blob`
+      const imageBlob = new Blob([eventData.backgroundImage], { type: eventData.backgroundImage.type });
+
+      // ✅ Добавляем `Blob` в `FormData`
+      formData.append("backgroundImage", imageBlob, eventData.backgroundImage.name);
+    } else {
+      throw new Error("Ошибка: изображение обязательно!");
+    }
+
+    console.log("📌 Final FormData перед отправкой:", Object.fromEntries(formData.entries()));
 
     const response = await fetch("http://94.232.246.12:8080/api/events", {
       method: "POST",
@@ -37,23 +54,24 @@ export async function createEvent(eventData: Record<string, any>, token: string)
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Ошибка создания события:", errorData);
+      console.error("❌ Ошибка создания события:", errorData);
       throw new Error(errorData.message || "Ошибка создания события");
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Ошибка при создании события:", error);
+    console.error("❌ Ошибка при создании события:", error);
     throw error;
   }
 }
+
 
 
 export async function deleteEvent(eventId: string, token: string): Promise<boolean> {
   try {
     const response = await fetch(`http://94.232.246.12:8080/api/events/${eventId}`, {
       method: "DELETE",
-      mode: "cors", // ✅ Указываем CORS-режим
+      mode: "cors",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -90,12 +108,12 @@ export async function fetchEvents(): Promise<Event[]> {
     }
 
     const data: EventResponse = await response.json();
-    console.log("🔹 Ответ API:", data); // ✅ Логируем ответ
+    console.log("🔹 Ответ API:", data);
 
-    return data.content || []; // ✅ Возвращаем массив событий
+    return data.content || [];
   } catch (error) {
     console.error("Ошибка при получении событий:", error);
-    return []; // ✅ Возвращаем пустой массив, если API не работает
+    return [];
   }
 }
 
@@ -113,4 +131,3 @@ export async function fetchEventById(eventId: string): Promise<any> {
     throw error;
   }
 }
-
