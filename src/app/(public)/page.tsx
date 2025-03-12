@@ -13,8 +13,7 @@ export default function HomePage() {
   return (
     <main className="space-y-8">
       <EventBanner />
-      <EventSearch onSearch={setSearchQuery} />
-      <EventFilters />
+     
       <EventList searchQuery={searchQuery} />
       <SubscriptionSection />
     </main>

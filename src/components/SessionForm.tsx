@@ -14,6 +14,7 @@ export default function SessionForm({ eventId, onSessionAdded }: Props) {
   const [newSession, setNewSession] = useState({
     buildingId: "",
     startTime: "",
+    price: "",
   });
 
   const handleCreateSession = async () => {
@@ -21,43 +22,43 @@ export default function SessionForm({ eventId, onSessionAdded }: Props) {
       setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Токен отсутствует");
-  
+
       if (!newSession.startTime || !newSession.price) {
         alert("Заполните дату, время и цену!");
         return;
       }
-  
-      console.log("📌 Данные перед отправкой:", {
-        eventId,
-        startTime: newSession.startTime,
-        price: parseFloat(newSession.price),
-      });
-  
+
+      // 🛠 Преобразуем в строгий UTC ISO 8601 формат
+      const localDate = new Date(newSession.startTime);
+      const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+      const formattedStartTime = utcDate.toISOString().replace(".000", ""); // ❗ Убираем лишние нули
+
+      console.log("📌 Отправка запроса с датой:", formattedStartTime);
+
       await createEventSession(
         {
           eventId,
-          startTime: newSession.startTime,
-          price: parseFloat(newSession.price),
+          price: Number(newSession.price), // Преобразуем в число
+          startTime: formattedStartTime, // ✅ Строгий формат
+          buildingId: newSession.buildingId || undefined, // Если есть buildingId, добавляем
         },
         token
       );
-  
+
       onSessionAdded();
-      onClose();
-      setNewSession({ startTime: "", price: "" });
+      setNewSession({ startTime: "", price: "", buildingId: "" });
     } catch (error) {
       console.error("Ошибка при создании сессии:", error);
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="flex flex-col gap-2 mt-2">
       <input
         type="text"
-        placeholder="ID здания"
+        placeholder="ID здания (необязательно)"
         className="border px-3 py-2 rounded-lg"
         value={newSession.buildingId}
         onChange={(e) => setNewSession({ ...newSession, buildingId: e.target.value })}
@@ -67,6 +68,13 @@ export default function SessionForm({ eventId, onSessionAdded }: Props) {
         className="border px-3 py-2 rounded-lg"
         value={newSession.startTime}
         onChange={(e) => setNewSession({ ...newSession, startTime: e.target.value })}
+      />
+      <input
+        type="number"
+        placeholder="Цена билета"
+        className="border px-3 py-2 rounded-lg"
+        value={newSession.price}
+        onChange={(e) => setNewSession({ ...newSession, price: e.target.value })}
       />
       <button
         onClick={handleCreateSession}

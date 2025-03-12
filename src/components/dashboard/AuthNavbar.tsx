@@ -2,22 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Search, Globe } from "lucide-react";
+import { Menu, X, Search, Globe, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MobileMenu from "@/components/dashboard/MobileMenu";
+import { useRouter } from "next/navigation";
 
 const cities = [
-  "Бишкек",
-  "Ош",
-  "Джалал-Абад",
-  "Каракол",
-  "Нарын",
-  "Баткен",
-  "Талас",
-  "Кант",
-  "Токмок",
-  "Балыкчы",
+  "Бишкек", "Ош", "Джалал-Абад", "Каракол", "Нарын", 
+  "Баткен", "Талас", "Кант", "Токмок", "Балыкчы",
 ];
 
 export default function Navbar() {
@@ -26,8 +19,9 @@ export default function Navbar() {
   const [selectedLanguage, setSelectedLanguage] = useState("RU");
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
-  // Следим за шириной экрана, чтобы включать бургер-меню
+  // Проверяем ширину экрана
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -40,28 +34,16 @@ export default function Navbar() {
   return (
     <>
       <header className="bg-white shadow-md p-4 flex justify-between items-center max-w-[1440px] mx-auto">
-        {/* Логотип */}
-        <Link href="/" className="text-2xl font-bold text-blue-600">
-          Ticketon
-        </Link>
+        <Link href="/" className="text-2xl font-bold text-blue-600">Ticketon</Link>
 
-        {/* Бургер-меню для мобильных устройств */}
         {isMobile ? (
-          <Button
-            variant="ghost"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="relative z-50"
-          >
+          <Button variant="ghost" onClick={() => setMenuOpen(!menuOpen)} className="relative z-50">
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </Button>
         ) : (
           <>
-            {/* Выбор города */}
             <div className="relative">
-              <button
-                onClick={() => setIsCityOpen(!isCityOpen)}
-                className="hover:text-gray-600"
-              >
+              <button onClick={() => setIsCityOpen(!isCityOpen)} className="hover:text-gray-600">
                 {selectedCity}
               </button>
               {isCityOpen && (
@@ -82,23 +64,19 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Поиск */}
             <div className="relative w-1/3">
               <Input placeholder="Поиск мероприятий..." className="pl-10" />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
 
-            {/* Кнопка "Кабинет" */}
-            <Button variant="outline">Кабинет</Button>
+            {/* Переход в личный кабинет */}
+            <Button variant="outline" onClick={() => router.push("/dashboard/profile")} className="flex gap-2">
+              <User size={18} /> Кабинет
+            </Button>
 
-            {/* Переключатель языка */}
             <div className="ml-4 flex items-center space-x-2 border p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
               <Globe />
-              <select
-                className="bg-transparent outline-none cursor-pointer"
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-              >
+              <select className="bg-transparent outline-none cursor-pointer" value={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)}>
                 <option value="ru">Русский</option>
                 <option value="kg">Кыргызча</option>
               </select>
@@ -107,7 +85,6 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Мобильное меню (открывается при нажатии на бургер) */}
       {isMobile && <MobileMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />}
     </>
   );

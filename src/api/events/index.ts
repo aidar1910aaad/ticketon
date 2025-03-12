@@ -131,3 +131,29 @@ export async function fetchEventById(eventId: string): Promise<any> {
     throw error;
   }
 }
+
+export async function fetchEventBySession(sessionId: string): Promise<{ title: string; startTime: string } | null> {
+  try {
+    // 📌 Загружаем список событий
+    const response = await fetch("http://94.232.246.12:8080/api/events");
+    if (!response.ok) throw new Error("Ошибка загрузки событий");
+
+    const events = await response.json();
+
+    // 📌 Ищем событие, у которого есть нужная сессия
+    for (const event of events.content) {
+      if (event.sessions.some((session: any) => session.id === sessionId)) {
+        return {
+          title: event.title,
+          startTime: event.sessions.find((s: any) => s.id === sessionId)?.startTime || "Дата неизвестна",
+        };
+      }
+    }
+
+    console.warn("⚠ Событие для данной сессии не найдено!");
+    return null;
+  } catch (error) {
+    console.error("Ошибка при получении информации о событии:", error);
+    return null;
+  }
+}

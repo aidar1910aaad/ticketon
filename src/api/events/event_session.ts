@@ -33,10 +33,15 @@ export async function fetchEventSessions(): Promise<any[]> {
     try {
       if (!token) throw new Error("Ошибка: отсутствует токен авторизации!");
   
+      // 🛠 Форматируем дату в строгий UTC ISO 8601
+      const localDate = new Date(sessionData.startTime);
+      const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+      const formattedStartTime = utcDate.toISOString().replace(".000", ""); // ❗ Убираем лишние нули
+  
       const formData = new FormData();
       formData.append("eventId", sessionData.eventId);
-      formData.append("startTime", sessionData.startTime);
-      formData.append("price", sessionData.price.toString()); // Приведение числа к строке
+      formData.append("startTime", formattedStartTime); // ✅ Гарантированно правильный формат
+      formData.append("price", sessionData.price.toString()); // ✅ Преобразуем в строку
   
       console.log("📌 Отправка запроса на сервер:", {
         URL: "http://94.232.246.12:8080/api/event-sessions",
@@ -48,13 +53,12 @@ export async function fetchEventSessions(): Promise<any[]> {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          // Не указываем "Content-Type", браузер сам установит boundary для FormData
         },
-        body: formData,
+        body: formData, // ✅ `Content-Type` не указываем, браузер установит сам
       });
   
       if (!response.ok) {
-        const errorData = await response.text(); // Читаем ответ как текст, чтобы увидеть детали ошибки
+        const errorData = await response.text(); // Читаем ответ как текст
         console.error("❌ Ошибка создания сессии:", errorData);
         throw new Error(`Ошибка создания сессии: ${errorData}`);
       }
