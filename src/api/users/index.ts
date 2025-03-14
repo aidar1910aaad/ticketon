@@ -1,22 +1,17 @@
 const API_BASE = "http://94.232.246.12:8080/api/admin/users";
 
-// Функция для получения токена (должна быть реализация аутентификации)
+// ✅ Функция для получения токена
 const getToken = () => localStorage.getItem("token") || "";
 
-// ✅ Получить всех пользователей (GET)
+// ✅ Получение пользователей (GET)
 export async function fetchUsers() {
   try {
     const response = await fetch(`${API_BASE}?page=0&size=10`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
 
-    if (!response.ok) {
-      throw new Error("Ошибка загрузки пользователей");
-    }
-
+    if (!response.ok) throw new Error("Ошибка загрузки пользователей");
     return await response.json();
   } catch (error) {
     console.error("Ошибка получения пользователей:", error);
@@ -24,7 +19,6 @@ export async function fetchUsers() {
   }
 }
 
-// ✅ Обновить данные пользователя (PUT)
 export async function updateUser(userID: string, updatedData: Partial<User>) {
   try {
     const formData = new FormData();
@@ -36,18 +30,14 @@ export async function updateUser(userID: string, updatedData: Partial<User>) {
       body: formData,
     });
 
-    if (!response.ok) {
-      throw new Error("Ошибка обновления пользователя");
-    }
-
+    if (!response.ok) throw new Error("Ошибка обновления пользователя");
     return await response.json();
   } catch (error) {
     console.error("Ошибка обновления пользователя:", error);
     return null;
   }
 }
-
-// ✅ Удалить пользователя (DELETE)
+// ✅ Удаление пользователя (DELETE)
 export async function deleteUser(userID: string) {
   try {
     const response = await fetch(`${API_BASE}/${userID}`, {
@@ -55,15 +45,13 @@ export async function deleteUser(userID: string) {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
 
-    if (!response.ok) {
-      throw new Error("Ошибка удаления пользователя");
-    }
+    if (!response.ok) throw new Error("Ошибка удаления пользователя");
   } catch (error) {
     console.error("Ошибка удаления пользователя:", error);
   }
 }
 
-// ✅ Сброс пароля (PUT)
+// ✅ Сброс пароля пользователя (PUT)
 export async function resetUserPassword(userID: string, newPassword: string) {
   try {
     const response = await fetch(`${API_BASE}/password-reset/${userID}?password=${newPassword}`, {
@@ -71,10 +59,10 @@ export async function resetUserPassword(userID: string, newPassword: string) {
       headers: { Authorization: `Bearer ${getToken()}` },
     });
 
-    if (!response.ok) {
-      throw new Error("Ошибка сброса пароля");
-    }
+    if (!response.ok) throw new Error("Ошибка сброса пароля");
+    return await response.json();
   } catch (error) {
     console.error("Ошибка сброса пароля:", error);
+    return null;
   }
 }
