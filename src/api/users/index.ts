@@ -66,3 +66,45 @@ export async function resetUserPassword(userID: string, newPassword: string) {
     return null;
   }
 }
+
+
+
+
+
+
+export async function fetchUserInfo() {
+  try {
+    const token = getToken();
+    if (!token) throw new Error("Ошибка: требуется авторизация");
+
+    const response = await fetch("http://94.232.246.12:8080/api/user-profile/userinfo", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error("Ошибка загрузки информации о пользователе");
+    return await response.json();
+  } catch (error) {
+    console.error("Ошибка получения информации о пользователе:", error);
+    return null;
+  }
+}
+
+
+export async function fetchUserTickets(page = 0, size = 10) {
+  try {
+    const token = getToken();
+    if (!token) throw new Error("Ошибка: требуется авторизация");
+
+    const response = await fetch(`http://94.232.246.12:8080/api/user-profile/mytickets?page=${page}&size=${size}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error("Ошибка загрузки билетов");
+    return await response.json();
+  } catch (error) {
+    console.error("Ошибка получения билетов:", error);
+    return null;
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchUserProfile } from "@/api/users/index";
+import { fetchUserInfo, fetchUserTickets } from "@/api/users/index";
 import { useRouter } from "next/navigation";
 import { XCircle } from "lucide-react";
 import UserInfo from "@/components/profile/UserInfo";
@@ -20,6 +20,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -32,9 +33,14 @@ export default function ProfilePage() {
       return;
     }
 
-    fetchUserProfile(token).then((data) => {
-      if (data) {
-        setUser(data);
+    fetchUserInfo().then((userData) => {
+      if (userData) {
+        setUser(userData);
+        fetchUserTickets().then((ticketData) => {
+          if (ticketData && ticketData.content) {
+            setTickets(ticketData.content);
+          }
+        });
       } else {
         setError("Ошибка загрузки профиля");
       }
@@ -63,7 +69,7 @@ export default function ProfilePage() {
           <>
             <UserInfo user={user!} />
             <UserPermissions authorities={user!.authorities} />
-            <UserTickets />
+            <UserTickets tickets={tickets} />
             <button
               className="mt-8 w-full px-6 py-3 bg-red-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-red-700 transition"
               onClick={() => {
