@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { fetchCategories } from "@/api/events/index";
 
 interface Category {
@@ -11,12 +11,15 @@ interface Category {
 
 export default function CategoryMenu() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>("");
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category") || "";
 
   useEffect(() => {
     loadCategories();
+
+    // Заменяем `useSearchParams()` на `window.location.search`
+    const params = new URLSearchParams(window.location.search);
+    setActiveCategory(params.get("category") || "");
   }, []);
 
   const loadCategories = async () => {
@@ -30,6 +33,7 @@ export default function CategoryMenu() {
 
   const handleCategoryClick = (categoryId: string) => {
     router.push(`/events?category=${categoryId}`);
+    setActiveCategory(categoryId);
   };
 
   return (

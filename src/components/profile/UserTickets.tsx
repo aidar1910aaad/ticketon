@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import { fetchUserTickets } from "@/api/ticket";
 import { Loader2, Ticket } from "lucide-react";

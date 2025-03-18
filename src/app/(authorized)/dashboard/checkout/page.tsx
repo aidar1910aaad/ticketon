@@ -1,17 +1,22 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { buyTicket } from "@/api/ticket";
 import { CheckCircle, XCircle } from "lucide-react";
 
 export default function CheckoutPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const ticketId = searchParams.get("ticket");
-  const row = searchParams.get("row");
-  const number = searchParams.get("number");
-  const price = searchParams.get("price");
+  const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+
+  useEffect(() => {
+    setSearchParams(new URLSearchParams(window.location.search));
+  }, []);
+
+  const ticketId = searchParams?.get("ticket") || "";
+  const row = searchParams?.get("row") || "";
+  const number = searchParams?.get("number") || "";
+  const price = searchParams?.get("price") || "";
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,12 +36,12 @@ export default function CheckoutPage() {
 
     setLoading(true);
     setError(null);
-    
+
     const isSuccess = await buyTicket(ticketId, token);
-    
+
     if (isSuccess) {
       setSuccess(true);
-      setTimeout(() => router.push("/dashboard"), 5000); // ⏳ Перенаправляем через 5 сек
+      setTimeout(() => router.push("/dashboard"), 5000);
     } else {
       setError("Ошибка при покупке билета. Попробуйте снова.");
     }
@@ -68,7 +73,7 @@ export default function CheckoutPage() {
               <div className="bg-green-100 text-green-600 p-3 rounded-lg flex items-center gap-2 mb-4 shadow">
                 <CheckCircle size={24} />
                 <div>
-                  ✅ Билет успешно куплен!  
+                  ✅ Билет успешно куплен!
                   <br /> Ряд {row}, Место {number}
                   <br /> Посмотреть билет можно в <strong>Личном кабинете</strong>.
                 </div>
