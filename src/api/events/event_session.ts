@@ -1,6 +1,10 @@
+import { API_BASE } from "@/config/config";
+
+
+
 export async function fetchEventSessions(): Promise<any[]> {
     try {
-      const response = await fetch("http://94.232.246.12:8080/api/event-sessions");
+      const response = await fetch(`${API_BASE}/event-sessions`);
       
       if (!response.ok) {
         throw new Error("Ошибка загрузки сессий событий");
@@ -16,7 +20,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function fetchEventSessionsByEvent(eventId: string): Promise<any[]> {
     try {
-      const response = await fetch(`http://94.232.246.12:8080/api/event-sessions/search/by-event/${eventId}`);
+      const response = await fetch(`${API_BASE}/event-sessions/search/by-event/${eventId}`);
       
       if (!response.ok) {
         throw new Error("Ошибка загрузки сессий события");
@@ -44,12 +48,12 @@ export async function fetchEventSessions(): Promise<any[]> {
       formData.append("price", sessionData.price.toString()); // ✅ Преобразуем в строку
   
       console.log("📌 Отправка запроса на сервер:", {
-        URL: "http://94.232.246.12:8080/api/event-sessions",
+        URL: `${API_BASE}/event-sessions`,
         Headers: { Authorization: `Bearer ${token}` },
         FormData: Object.fromEntries(formData.entries()),
       });
   
-      const response = await fetch("http://94.232.246.12:8080/api/event-sessions", {
+      const response = await fetch(`${API_BASE}/event-sessions`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -74,7 +78,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function updateEventSession(sessionId: string, sessionData: Record<string, any>, token: string): Promise<any> {
     try {
-      const response = await fetch(`http://94.232.246.12:8080/api/event-sessions/${sessionId}`, {
+      const response = await fetch(`${API_BASE}/event-sessions/${sessionId}`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -98,7 +102,7 @@ export async function fetchEventSessions(): Promise<any[]> {
   
   export async function deleteEventSession(sessionId: string, token: string): Promise<boolean> {
     try {
-      const response = await fetch(`http://94.232.246.12:8080/api/event-sessions/${sessionId}`, {
+      const response = await fetch(`${API_BASE}/event-sessions/${sessionId}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`,

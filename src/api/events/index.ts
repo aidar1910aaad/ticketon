@@ -1,6 +1,8 @@
+import { API_BASE } from "@/config/config";
+
 export async function fetchCategories(): Promise<{ id: string; name: string }[]> {
   try {
-    const response = await fetch("http://94.232.246.12:8080/api/event-categories");
+    const response = await fetch(`${API_BASE}/event-categories`);
 
     if (!response.ok) {
       throw new Error("Ошибка загрузки категорий");
@@ -31,12 +33,12 @@ export async function createEvent(eventData: Record<string, any>, token: string)
     formData.append("categoryId", eventData.categoryID ?? "");
     formData.append("ageRestriction", eventData.ageRestriction ?? "");
 
-    // ✅ Проверяем, есть ли изображение
+
     if (eventData.backgroundImage) {
-      // Преобразуем `File` в `Blob`
+   
       const imageBlob = new Blob([eventData.backgroundImage], { type: eventData.backgroundImage.type });
 
-      // ✅ Добавляем `Blob` в `FormData`
+
       formData.append("backgroundImage", imageBlob, eventData.backgroundImage.name);
     } else {
       throw new Error("Ошибка: изображение обязательно!");
@@ -44,7 +46,7 @@ export async function createEvent(eventData: Record<string, any>, token: string)
 
     console.log("📌 Final FormData перед отправкой:", Object.fromEntries(formData.entries()));
 
-    const response = await fetch("http://94.232.246.12:8080/api/events", {
+    const response = await fetch(`${API_BASE}/events`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -69,7 +71,7 @@ export async function createEvent(eventData: Record<string, any>, token: string)
 
 export async function deleteEvent(eventId: string, token: string): Promise<boolean> {
   try {
-    const response = await fetch(`http://94.232.246.12:8080/api/events/${eventId}`, {
+    const response = await fetch(`${API_BASE}/events/${eventId}`, {
       method: "DELETE",
       mode: "cors",
       headers: {
@@ -101,7 +103,7 @@ interface EventResponse {
 
 export async function fetchEvents(): Promise<Event[]> {
   try {
-    const response = await fetch("http://94.232.246.12:8080/api/events");
+    const response = await fetch(`${API_BASE}/events`);
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки событий: ${response.statusText}`);
@@ -119,7 +121,7 @@ export async function fetchEvents(): Promise<Event[]> {
 
 export async function fetchEventById(eventId: string): Promise<any> {
   try {
-    const response = await fetch(`http://94.232.246.12:8080/api/events/search/by-id/${eventId}`);
+    const response = await fetch(`${API_BASE}/events/search/by-id/${eventId}`);
 
     if (!response.ok) {
       throw new Error(`Ошибка загрузки события: ${response.statusText}`);
@@ -135,12 +137,12 @@ export async function fetchEventById(eventId: string): Promise<any> {
 export async function fetchEventBySession(sessionId: string): Promise<{ title: string; startTime: string } | null> {
   try {
     // 📌 Загружаем список событий
-    const response = await fetch("http://94.232.246.12:8080/api/events");
+    const response = await fetch(`${API_BASE}/events`);
     if (!response.ok) throw new Error("Ошибка загрузки событий");
 
     const events = await response.json();
 
-    // 📌 Ищем событие, у которого есть нужная сессия
+
     for (const event of events.content) {
       if (event.sessions.some((session: any) => session.id === sessionId)) {
         return {

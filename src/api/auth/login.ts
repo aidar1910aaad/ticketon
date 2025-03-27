@@ -1,6 +1,8 @@
+import { API_BASE } from "@/config/config";
+
 export async function login(credentials: { email: string; password: string }) {
   try {
-    const res = await fetch("http://94.232.246.12:8080/api/auth/login", {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),

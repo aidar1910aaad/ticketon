@@ -1,6 +1,8 @@
+import { API_BASE } from "@/config/config";
+
 export async function fetchEventCategories(): Promise<{ id: string; name: string }[]> {
     try {
-      const response = await fetch("http://94.232.246.12:8080/api/event-categories");
+      const response = await fetch(`${API_BASE}/event-categories`);
   
       if (!response.ok) {
         throw new Error("Ошибка загрузки категорий");
@@ -21,7 +23,7 @@ export async function fetchEventCategories(): Promise<{ id: string; name: string
   
       console.log("Отправка категории:", Object.fromEntries(formData.entries()));
   
-      const response = await fetch("http://94.232.246.12:8080/api/event-categories", {
+      const response = await fetch(`${API_BASE}/event-categories`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -44,7 +46,7 @@ export async function fetchEventCategories(): Promise<{ id: string; name: string
   
   export async function deleteEventCategory(categoryId: string, token: string): Promise<void> {
     try {
-      const response = await fetch(`http://94.232.246.12:8080/api/event-categories/${categoryId}`, {
+      const response = await fetch(`${API_BASE}/event-categories/${categoryId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,12 +1,11 @@
-const API_BASE = "http://94.232.246.12:8080/api/admin/users";
+import { API_BASE } from "@/config/config";
 
-// ✅ Функция для получения токена
+
 const getToken = () => localStorage.getItem("token") || "";
 
-// ✅ Получение пользователей (GET)
 export async function fetchUsers() {
   try {
-    const response = await fetch(`${API_BASE}?page=0&size=10`, {
+    const response = await fetch(`${API_BASE}/admin/users?page=0&size=10`, {
       method: "GET",
       headers: { Authorization: `Bearer ${getToken()}` },
     });
@@ -24,7 +23,7 @@ export async function updateUser(userID: string, updatedData: Partial<User>) {
     const formData = new FormData();
     Object.entries(updatedData).forEach(([key, value]) => formData.append(key, String(value)));
 
-    const response = await fetch(`${API_BASE}/${userID}`, {
+    const response = await fetch(`${API_BASE}/admin/users/${userID}`, {
       method: "PUT",
       headers: { Authorization: `Bearer ${getToken()}` },
       body: formData,
@@ -37,10 +36,10 @@ export async function updateUser(userID: string, updatedData: Partial<User>) {
     return null;
   }
 }
-// ✅ Удаление пользователя (DELETE)
+
 export async function deleteUser(userID: string) {
   try {
-    const response = await fetch(`${API_BASE}/${userID}`, {
+    const response = await fetch(`${API_BASE}/admin/users/${userID}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${getToken()}` },
     });
@@ -51,10 +50,10 @@ export async function deleteUser(userID: string) {
   }
 }
 
-// ✅ Сброс пароля пользователя (PUT)
+
 export async function resetUserPassword(userID: string, newPassword: string) {
   try {
-    const response = await fetch(`${API_BASE}/password-reset/${userID}?password=${newPassword}`, {
+    const response = await fetch(`${API_BASE}/admin/users/password-reset/${userID}?password=${newPassword}`, {
       method: "PUT",
       headers: { Authorization: `Bearer ${getToken()}` },
     });
@@ -77,7 +76,7 @@ export async function fetchUserInfo() {
     const token = getToken();
     if (!token) throw new Error("Ошибка: требуется авторизация");
 
-    const response = await fetch("http://94.232.246.12:8080/api/user-profile/userinfo", {
+    const response = await fetch(`${API_BASE}/user-profile/userinfo`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -96,7 +95,7 @@ export async function fetchUserTickets(page = 0, size = 10) {
     const token = getToken();
     if (!token) throw new Error("Ошибка: требуется авторизация");
 
-    const response = await fetch(`http://94.232.246.12:8080/api/user-profile/mytickets?page=${page}&size=${size}`, {
+    const response = await fetch(`${API_BASE}/user-profile/mytickets?page=${page}&size=${size}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

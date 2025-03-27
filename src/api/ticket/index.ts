@@ -1,6 +1,8 @@
+import { API_BASE } from "@/config/config";
+
 export async function fetchTicketsBySession(sessionId: string): Promise<any[]> {
     try {
-      const response = await fetch(`http://94.232.246.12:8080/api/tickets/search/by-session/${sessionId}`);
+      const response = await fetch(`${API_BASE}/tickets/search/by-session/${sessionId}`);
   
       if (!response.ok) {
         throw new Error("Ошибка загрузки билетов");
@@ -18,7 +20,7 @@ export async function fetchTicketsBySession(sessionId: string): Promise<any[]> {
     try {
       if (!token) throw new Error("Ошибка: отсутствует токен авторизации!");
   
-      const response = await fetch(`http://94.232.246.12:8080/api/tickets/buy/${ticketID}`, {
+      const response = await fetch(`${API_BASE}/tickets/buy/${ticketID}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,7 +47,7 @@ export async function fetchTicketsBySession(sessionId: string): Promise<any[]> {
     if (!token) throw new Error("Ошибка: отсутствует токен авторизации!");
   
     const response = await fetch(
-      "http://94.232.246.12:8080/api/user-profile/mytickets?page=0&size=10",
+      `${API_BASE}/user-profile/mytickets?page=0&size=10`,
       {
         method: "GET",
         headers: {
